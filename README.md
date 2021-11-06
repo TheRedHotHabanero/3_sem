@@ -1,5 +1,5 @@
-# [3_sem](https://github.com/TheRedHotHabanero/3_sem/tree/master/1_stat)
-## 1_stat
+# 3_sem
+## [1_stat](https://github.com/TheRedHotHabanero/3_sem/tree/master/1_stat)
 Аналог утилиты stat. Формат вывода в меру испорченности. Надо знать отличия stat от lstat от statx от fstat от fstatat.
 Ботаем маны, достаем недостающие:
 manpages
