@@ -5,7 +5,7 @@
 #include <sys/sysmacros.h> //fstat
 #include <sys/types.h>     //stat
 #include <time.h>
-#define PERMS_BITS 1023
+#define BITS 1023
 
 int nano_time(char* out_buf, size_t buf_len, const struct timespec* file_time)
 {
@@ -19,7 +19,7 @@ int nano_time(char* out_buf, size_t buf_len, const struct timespec* file_time)
   return snprintf(out_buf, buf_len, "%s.%09ld %s", current_time, file_time->tv_nsec, add_time);
 }
 
-void perms(char* buf, const unsigned mode)
+void bufs(char* buf, const unsigned mode)
 {
   buf[0] = mode & S_IRUSR ? 'r' : '-';
   buf[1] = mode & S_IWUSR ? 'w' : '-';
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
   printf("I-node number:            %ld\n", (long) sb.st_ino);
   printf("Mode:                     %lo (octal)\n", (unsigned long) sb.st_mode);
   printf("Link count:               %ld\n", (long) sb.st_nlink);
-  perms(perm_str, sb.st_mode);
-  printf("Access:                   %o/%s\n", sb.st_mode & PERMS_BITS, perm_str);
+  bufs(perm_str, sb.st_mode);
+  printf("Access:                   %o/%s\n", sb.st_mode & BITS, perm_str);
 	printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
 	printf("Preferred I/O block size: %ld bytes\n", (long) sb.st_blksize);
   printf("File size:                %lld bytes\n", (long long) sb.st_size);
