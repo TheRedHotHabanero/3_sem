@@ -1,3 +1,3 @@
 How it works:
-  `gcc main.c`
+  `gcc main.c`  
   `./a.out <file_name>`
