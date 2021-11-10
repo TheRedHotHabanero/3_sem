@@ -9,7 +9,7 @@
 ssize_t write_all(int fd, const void *buf, size_t count)
 {
   size_t bytes_written = 0;
-  const uint8_t *buf_addr = buf;
+  const uint8_t *buf_addr = (const uint8_t *)buf;
   while (bytes_written < count)
   {
     ssize_t res = write(fd, buf_addr + bytes_written, count - bytes_written);
