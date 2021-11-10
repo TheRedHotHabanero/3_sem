@@ -51,8 +51,7 @@ int main(int argc, char *argv[])
   }
 
   printf("File name:                %s\n", argv[1]);
-	printf("ID of containing device:  [%lx,%lx]\n",
-        (long) major(sb.st_dev), (long) minor(sb.st_dev));
+	printf("ID of containing device:  [%lx,%lx]\n", (long) major(sb.st_dev), (long) minor(sb.st_dev));
 	printf("File type:                ");
 
   switch (sb.st_mode & S_IFMT)
@@ -68,19 +67,14 @@ int main(int argc, char *argv[])
   }
 
   printf("I-node number:            %ld\n", (long) sb.st_ino);
-  printf("Mode:                     %lo (octal)\n",
-        (unsigned long) sb.st_mode);
+  printf("Mode:                     %lo (octal)\n", (unsigned long) sb.st_mode);
   printf("Link count:               %ld\n", (long) sb.st_nlink);
   perms(perm_str, sb.st_mode);
   printf("Access:                   %o/%s\n", sb.st_mode & PERMS_BITS, perm_str);
-	printf("Ownership:                UID=%ld   GID=%ld\n",
-        (long) sb.st_uid, (long) sb.st_gid);
-	printf("Preferred I/O block size: %ld bytes\n",
-        (long) sb.st_blksize);
-  printf("File size:                %lld bytes\n",
-        (long long) sb.st_size);
-  printf("Blocks allocated:         %lld\n",
-        (long long) sb.st_blocks);
+	printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
+	printf("Preferred I/O block size: %ld bytes\n", (long) sb.st_blksize);
+  printf("File size:                %lld bytes\n", (long long) sb.st_size);
+  printf("Blocks allocated:         %lld\n", (long long) sb.st_blocks);
 
 	//------------------------------------------------------special time format
   nano_time(string, sizeof(string), &sb.st_ctim);
