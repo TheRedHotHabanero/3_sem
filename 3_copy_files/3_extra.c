@@ -94,8 +94,7 @@ int main(int argc, char *argv[])
     case S_IFDIR:  printf("directory\n");               break;
     case S_IFIFO:  printf("FIFO/pipe\n");               break;
     case S_IFLNK:  printf("symlink\n");                 break;
-    case S_IFREG:  printf("regular file\n")
-    {
+    case S_IFREG:
       int fd_1 = open(argv[1], O_RDONLY);
       if (fd_1 == -1)
       {
@@ -123,7 +122,6 @@ int main(int argc, char *argv[])
         perror("Failure during close second");
         return 6;
       }
-    }
     case S_IFSOCK: printf("socket\n");                  break;
     default:       printf("unknown?\n");                break;
   }
