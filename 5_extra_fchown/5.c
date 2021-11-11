@@ -59,6 +59,13 @@ size_t copy_all(const int fd_1, const int fd_2, struct stat* sb)
     perror("Failure while copying times");
     return 10;
   }
+
+  // copying uid and gid
+  if(fchown(fd_2, sb->st_uid, sb->st_gid) < 0)
+  {
+    perror("Failure to copy UID and GID");
+    return 11;
+  }
   return 0;
 }
 
