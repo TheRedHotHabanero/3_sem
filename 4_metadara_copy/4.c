@@ -43,11 +43,21 @@ size_t copy_all(const int fd_1, const int fd_2, struct stat* sb)
       free(buf);
       return 8;
     }
-    // copying rights to access
-
-    // copying time of appeal and modifications
-
     free(buf);
+  }
+
+  // copying rights to access
+  if(fchmod(fd_2, sb->st_mode) < 0)
+  {
+    perror("Failure while copying access rights");
+    return 9;
+  }
+
+  // copying time of appeal and modifications
+  if(futimens(fd_2, (struct timespec[]){sb->st_atim, sb->st_mtim}) < 0)
+  {
+    perror("Failure while copying times");
+    return 10;
   }
   return 0;
 }
