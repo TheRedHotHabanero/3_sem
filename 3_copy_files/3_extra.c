@@ -86,40 +86,46 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  // checking if the file if regilar or not
-  if(S_ISREG(sb.st_mode))
+ // macros from man fstat
+  switch (sb.st_mode & S_IFMT)
   {
-    fprintf(stderr, "File %s is not 'Regular' type\n", argv[1]);
-    return 9;
+    case S_IFBLK:  printf("block device\n");            break;
+    case S_IFCHR:  printf("character device\n");        break;
+    case S_IFDIR:  printf("directory\n");               break;
+    case S_IFIFO:  printf("FIFO/pipe\n");               break;
+    case S_IFLNK:  printf("symlink\n");                 break;
+    case S_IFREG:  printf("regular file\n")
+    {
+      int fd_1 = open(argv[1], O_RDONLY);
+      if (fd_1 == -1)
+      {
+        perror("Failed to open copied");
+        return 3;
+      }
+
+      int fd_2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+      if (fd_2 == -1)
+      {
+        perror("Failed to open file for writing");
+        return 4;
+      }
+
+      copy_all(fd_1, fd_2);
+
+      if (close(fd_1) < 0)
+      {
+        perror("Failure during close first");
+        return 5;
+      }
+
+      if (close(fd_2) < 0)
+      {
+        perror("Failure during close second");
+        return 6;
+      }
+    }
+    case S_IFSOCK: printf("socket\n");                  break;
+    default:       printf("unknown?\n");                break;
   }
-
-  int fd_1 = open(argv[1], O_RDONLY);
-  if (fd_1 == -1)
-  {
-    perror("Failed to open copied");
-    return 3;
-  }
-
-  int fd_2 = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-  if (fd_2 == -1)
-  {
-    perror("Failed to open file for writing");
-    return 4;
-  }
-
-  copy_all(fd_1, fd_2);
-
-  if (close(fd_1) < 0)
-  {
-    perror("Failure during close first");
-    return 5;
-  }
-
-  if (close(fd_2) < 0)
-  {
-    perror("Failure during close second");
-    return 6;
-  }
-
   return 0;
 }
