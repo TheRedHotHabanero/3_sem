@@ -52,7 +52,23 @@ size_t copy_all(const int fd_1, const int fd_2)
 }
 
 size_t create_symlink(const char* path, const char* name)
-{ return 0; }
+{
+  char* buf = (char*)calloc(_PC_PATH_MAX, sizeof(char));
+
+  if (readlink(path, buf, _PC_PATH_MAX) == -1)
+  {
+    fprintf(stderr, "Failed while reading link\n");
+    free(buf);
+    return 10;
+  }
+  if (symlink(buf, name) == -1)
+  {
+    fprintf(stderr, "Failed to create the linl\n");
+    free(buf);
+    return 11;
+  }
+  return 0;
+}
 
 int main(int argc, char *argv[])
 {
@@ -98,6 +114,7 @@ int main(int argc, char *argv[])
     perror("Failure during close first");
     return 5;
   }
+
   if (close(fd_2) < 0)
   {
     perror("Failure during close second");
