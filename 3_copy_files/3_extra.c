@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
       }
       break;
     case S_IFLNK:
-      crt_link(argv[1], argv[2]);
+      create_symlink(argv[1], argv[2]);
       break;
     case S_IFREG:
     {
