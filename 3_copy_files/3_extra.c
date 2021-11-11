@@ -89,12 +89,29 @@ int main(int argc, char *argv[])
  // macros from man fstat
   switch (sb.st_mode & S_IFMT)
   {
-    case S_IFBLK:  printf("block device\n");            break;
-    case S_IFCHR:  printf("character device\n");        break;
-    case S_IFDIR:  printf("directory\n");               break;
-    case S_IFIFO:  printf("FIFO/pipe\n");               break;
-    case S_IFLNK:  printf("symlink\n");                 break;
+    case S_IFBLK:
+    case S_IFCHR:
+      if (mknod(argv[2], sb.st_mode, sb.st_dev) == -1)
+      {
+        fprintf(stderr, "Failed to create new character device");
+        return 12;
+      }
+      break;
+    case S_IFDIR:
+      printf("directory\n");
+      break;
+    case S_IFIFO:
+      if (mkfifo(argv[2], sb.st_mode) == -1)
+      {
+        fprintf(stderr, "Failed to create %s FIFO file\n", argv[2]);
+        return 13;
+      }
+      break;
+    case S_IFLNK:
+      crt_link(argv[1], argv[2]);
+      break;
     case S_IFREG:
+    {
       int fd_1 = open(argv[1], O_RDONLY);
       if (fd_1 == -1)
       {
@@ -122,8 +139,13 @@ int main(int argc, char *argv[])
         perror("Failure during close second");
         return 6;
       }
-    case S_IFSOCK: printf("socket\n");                  break;
-    default:       printf("unknown?\n");                break;
+    }
+    case S_IFSOCK:
+      printf("socket\n");
+      break;
+    default:
+      fprintf(stderr, "File %s is not from available macros list", argv[1]);
+      break;
   }
   return 0;
 }
