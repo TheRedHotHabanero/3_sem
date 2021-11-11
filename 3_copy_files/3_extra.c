@@ -51,6 +51,9 @@ size_t copy_all(const int fd_1, const int fd_2)
   return 0;
 }
 
+size_t create_symlink(const char* path, const char* name)
+{ return 0; }
+
 int main(int argc, char *argv[])
 {
   if (argc != 3)
@@ -67,6 +70,7 @@ int main(int argc, char *argv[])
     return 2;
   }
 
+  // checking if the file if regilar or not
   if(S_ISREG(sb.st_mode))
   {
     fprintf(stderr, "File %s is not 'Regular' type\n", argv[1]);
