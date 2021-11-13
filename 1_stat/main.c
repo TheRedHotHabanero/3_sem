@@ -34,7 +34,7 @@ void bufs(char* buf, const unsigned mode)
 
 int main(int argc, char *argv[])
 {
-  struct stat sb;
+  struct stat sb = {};
   char string[sizeof("YYYY-MM-DD HH:MM:SS.nnnnnnnnn +HHMM")];
   char perm_str[sizeof("rwxrwxrwx")];
 

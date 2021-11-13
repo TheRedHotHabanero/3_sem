@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
+#include <assert.h>
 #define MEMBLOCK 4096
 
 ssize_t p_write_all(int fd, const void *buf, size_t count, long int counter)
@@ -32,6 +33,7 @@ size_t copy_all(const int fd_1, const int fd_2)
   while(copy_var > 0)
   {
     void* buf = calloc(MEMBLOCK, sizeof(char));
+    assert(buf);
     copy_var = pread(fd_1, buf, MEMBLOCK, counter);
     if(copy_var < 0)
     {
