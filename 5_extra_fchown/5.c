@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  struct stat sb;
+  struct stat sb = {};
 
   if (lstat(argv[1], &sb) == -1)
   {
