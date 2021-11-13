@@ -41,18 +41,18 @@ int main(int argc, char *argv[])
   if (argc != 2)
   {
     fprintf(stderr, "Usage: %s <pathname>\n", argv[0]);
-    exit(EXIT_FAILURE);
+    return(1);
   }
 
   if (lstat(argv[1], &sb) == -1)
   {
     perror("lstat");
-    exit(EXIT_FAILURE);
+    return(2);
   }
 
   printf("File name:                %s\n", argv[1]);
-	printf("ID of containing device:  [%lx,%lx]\n", (long) major(sb.st_dev), (long) minor(sb.st_dev));
-	printf("File type:                ");
+  printf("ID of containing device:  [%lx,%lx]\n", (long) major(sb.st_dev), (long) minor(sb.st_dev));
+  printf("File type:                ");
 
   switch (sb.st_mode & S_IFMT)
   {
@@ -71,8 +71,8 @@ int main(int argc, char *argv[])
   printf("Link count:               %ld\n", (long) sb.st_nlink);
   bufs(perm_str, sb.st_mode);
   printf("Access:                   %o/%s\n", sb.st_mode & BITS, perm_str);
-	printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
-	printf("Preferred I/O block size: %ld bytes\n", (long) sb.st_blksize);
+  printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
+  printf("Preferred I/O block size: %ld bytes\n", (long) sb.st_blksize);
   printf("File size:                %lld bytes\n", (long long) sb.st_size);
   printf("Blocks allocated:         %lld\n", (long long) sb.st_blocks);
 
@@ -85,5 +85,5 @@ int main(int argc, char *argv[])
   printf("Last file modification:   %s\n", string);
 	//-------------------------------------------------------------------------
 
-	exit(EXIT_SUCCESS);
+  return(0);
 }
