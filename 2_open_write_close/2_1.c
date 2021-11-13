@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     return 3;
   }
 
-  write(fd, argv[2], strlen(argv[2]));
+  //write(fd, argv[2], strlen(argv[2]));
 
   if (close(fd) < 0)
   {
