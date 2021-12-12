@@ -207,7 +207,6 @@ int main(int argc, char *argv[])
         if (fstatat(dir_fd, entry->d_name, &sb, AT_SYMLINK_NOFOLLOW) < 0)
         {
           perror("fstatat");
-          printf("?");
         }
         else
           entry->d_type = (unsigned char)mode_char(sb.st_mode);

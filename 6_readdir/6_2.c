@@ -62,7 +62,6 @@ int main(int argc, char* argv[])
       if(fstatat(fd, entry->d_name, &sb, AT_SYMLINK_NOFOLLOW) < 0)
       {
         perror("fstatat");
-        printf("?");
       }
       else
       { entry_type = mode_char(sb.st_mode); }
