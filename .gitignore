@@ -3,3 +3,4 @@ build/
 cmake-build-debug/
 .vscode/
 a.out
+counter.txt
