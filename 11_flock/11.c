@@ -20,12 +20,13 @@ int main(void)
   fd = open(file_name, O_RDWR | O_CREAT, DIR_MODE);
 
   // Locking file for reading and writing
-  lockf(fd, F_LOCK, 0);
+  // On  Linux,  lockf()  is  just  an  interface  on top of fcntl(2) locking.
+  lockf(fd, F_LOCK, 0); // F_LOCK Set an exclusive lock on the specified section of the file.
 
   long long int bytes_read = read(fd, buf, sizeof(buf));
   if (bytes_read < 0) {
     perror("read");
-    lockf(fd, F_ULOCK, 0);
+    lockf(fd, F_ULOCK, 0); // F_ULOCK Unlock the indicated section of the file
     close(fd);
     return -1;
   }
