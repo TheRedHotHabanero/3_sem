@@ -71,6 +71,7 @@ int main(int argc, char *argv[]) {
 
   printf("Press ENTER to break\n");
 
+ // Monitoring filesystem events
   fd = inotify_init1(IN_NONBLOCK);
   if (fd == -1) {
     perror("inotify_init1");
