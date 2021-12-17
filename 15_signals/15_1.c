@@ -35,7 +35,6 @@ int main(void) {
     if (sigaction(signls[i], &recieved, NULL) < 0) {
       perror("sigaction");
       return -1;
-      ;
     }
   }
 
