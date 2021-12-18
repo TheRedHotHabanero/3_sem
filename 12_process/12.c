@@ -13,7 +13,7 @@
 #define NGROUPS 20
 #define DEBUG
 
-int main(void) {
+int main() {
   // UID
   uid_t real_user_id = getuid();
   uid_t effecrive_user_id = geteuid();

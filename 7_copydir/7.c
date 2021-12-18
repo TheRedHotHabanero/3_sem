@@ -61,19 +61,19 @@ size_t copy_all(const int fd_1, const int fd_2, struct stat *sb) {
     free(buf);
   }
 
-  // copying rights to access
+  // Copying rights to access
   if (fchmod(fd_2, sb->st_mode) < 0) {
     perror("Failure while copying access rights");
     return 9;
   }
 
-  // copying time of appeal and modifications
+  // Copying time of appeal and modifications
   if (futimens(fd_2, (struct timespec[]){sb->st_atim, sb->st_mtim}) < 0) {
     perror("Failure while copying times");
     return 10;
   }
 
-  // copying uid and gid
+  // Copying uid and gid
   if (fchown(fd_2, sb->st_uid, sb->st_gid) < 0) {
     perror("Failure to copy UID and GID");
     return 11;
@@ -84,17 +84,17 @@ size_t copy_all(const int fd_1, const int fd_2, struct stat *sb) {
 // Function which creates a new symlink
 ssize_t crt_linkat(const int old_fd, const int new_fd, const char *pathname,
                    const char *newname) {
-  // memory allocation
+  // Memory allocation
   char *buf = (char *)calloc(PATH_MAX, sizeof(char));
   ssize_t result = 0;
 
-  // reading the link
+  // Reading the link
   if (readlinkat(old_fd, pathname, buf, PATH_MAX) < 0) {
     fprintf(stderr, "Failed to read link\n");
     result = 12;
   }
 
-  // creating new link
+  // Creating new link
   if (symlinkat(buf, new_fd, newname) < 0) {
     fprintf(stderr, "Failed to create a new link\n");
     result = 13;
@@ -110,7 +110,7 @@ ssize_t copy_dir(DIR *old_dir, DIR *new_dir) {
   struct dirent *entry;
   struct stat sb;
 
-  // obtaining file descriptors of our old and new directories
+  // Obtaining file descriptors of our old and new directories
   int old_dir_fd = dirfd(old_dir);
   int new_dir_fd = dirfd(new_dir);
 
@@ -143,7 +143,7 @@ ssize_t copy_dir(DIR *old_dir, DIR *new_dir) {
         close(new_file_fd);
       } break;
 
-      // symlinks
+      // Symlinks
       case 'l': {
         if (crt_linkat(old_dir_fd, new_dir_fd, entry->d_name, entry->d_name) <
                 0 &&
@@ -154,7 +154,7 @@ ssize_t copy_dir(DIR *old_dir, DIR *new_dir) {
 
       } break;
 
-      // block devices and character devices can be created by the same function
+      // Block devices and character devices can be created by the same function
       // so they merged
       case 'b':
       case 'c': {
@@ -188,8 +188,8 @@ ssize_t copy_dir(DIR *old_dir, DIR *new_dir) {
         }
         DIR *old_nest_dir = fdopendir(old_nest_dirfd);
 
-        // if directory with name <entry->d_name> already exists, then it will
-        // be just opened. Otherwise, it will be created by mkdirat()
+        // If directory already exists, then it will
+        // be just opened. Else it will be created by mkdirat()
         if (mkdirat(new_dir_fd, entry->d_name, DIR_MODE) < 0 &&
             errno != EEXIST) {
           perror("mkdirat");
@@ -234,7 +234,7 @@ int main(int argc, char *argv[]) {
   const char *old_dir_name = ".";
   const char *new_dir_name = NULL;
 
-  // if no parameters added
+  // If no parameters added
   if (argc < 3) {
     fprintf(stderr, "Usage: %s <old dir pathname> <new dir pathname>\n",
             argv[0]);
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
     new_dir_name = argv[2];
   }
 
-  // obtaining DIR* pointer of directory program will copy from and opening it
+  // Obtaining DIR* pointer of directory program will copy from and opening it
   DIR *old_dir_fd = opendir(old_dir_name);
 
   if (mkdir(new_dir_name, DIR_MODE) < 0 && errno != EEXIST) {

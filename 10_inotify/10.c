@@ -90,9 +90,9 @@ int main(int argc, char *argv[]) {
   fds[1].fd = fd;
   fds[1].events = POLLIN;
 
-  // reading events in a loop
+  // Reading events in a loop
   while (1) {
-    // checking for events
+    // Checking for events
     poll_num = poll(fds, nfds, -1);
 
     if (poll_num == -1) {
@@ -102,9 +102,9 @@ int main(int argc, char *argv[]) {
       return -1;
     }
 
-    // if there is an event
+    // If an event
     if (poll_num > 0) {
-      // if user entered something
+      // If entered something
       if (fds[0].revents & POLLIN) {
         if (read(STDIN_FILENO, input_buf, sizeof(input_buf)) > 0 &&
             input_buf[0] == '\n') {
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
         }
       }
 
-      // if creating or deleting event has happened
+      // If creating or deleting event has happened
       if (fds[1].revents & POLLIN)
         if (handle_events(fd, wd, dir_name) < 0) {
           perror("handle_events");
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // closing descriptor inotify returned
+  // Closing descriptor inotify returned
   if (close(fd) < 0) {
     perror("close");
     return -1;

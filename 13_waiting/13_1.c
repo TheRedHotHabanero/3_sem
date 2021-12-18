@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (child_id == 0) {
-    // this code is executed in child process only
+    // This code is executed in child process only
     proc_info("Child");
     if (argc > 1)
       printf("%d\n", 42 / atoi(argv[1]));
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     return 42;
   } else {
-    // this code is executed in parent process only
+    // This code is executed in parent process only
     proc_info("Parent");
     int status;
     pid_t res = 0;

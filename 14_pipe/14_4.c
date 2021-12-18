@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-int main(void) {
+int main() {
   int pipe_fds[2];
   if (pipe(pipe_fds) < 0) {
     perror("pipe");

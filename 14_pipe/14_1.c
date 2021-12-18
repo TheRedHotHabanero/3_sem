@@ -10,14 +10,14 @@ void proc_info(const char *procname) {
          getppid(), getpgid(0), getsid(0));
 }
 
-int main(void) {
+int main() {
   pid_t child_id = fork();
   if (child_id < 0) {
     perror("fork");
     return 1;
   }
 
-  // executed in child process only
+  // Executed in child process only
   if (child_id == 0) {
     if (dup2(fileno(stderr), fileno(stdout)) < 0) {
       perror("dup2");
@@ -26,7 +26,7 @@ int main(void) {
     return 0;
   }
 
-  // executed in parent process only
+  // Executed in parent process only
   proc_info("parent");
   wait(NULL);
 

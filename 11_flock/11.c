@@ -8,7 +8,7 @@
 #include <sys/file.h>
 #include <unistd.h>
 
-int main(void)
+int main()
 {
   const char *file_name = "counter.txt";
   int fd = 0;

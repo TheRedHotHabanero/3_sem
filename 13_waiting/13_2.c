@@ -17,7 +17,7 @@ void proc_info(const char *procname) {
          getppid(), getpgid(0), getsid(0));
 }
 
-int main(void) {
+int main() {
   pid_t child_id = fork();
   if (child_id < 0) {
     perror("fork");
@@ -25,7 +25,7 @@ int main(void) {
   }
 
   if (child_id == 0) {
-    // this code is executed in child process only
+    // This code is executed in child process only
     proc_info("Child");
 
     pid_t parent_pid = getppid();
@@ -44,7 +44,7 @@ int main(void) {
 
     return 0;
   } else {
-    // this code is executed in parent process only
+    // This code is executed in parent process only
     proc_info("Parent");
 
     sleep(20);

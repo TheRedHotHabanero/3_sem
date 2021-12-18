@@ -23,7 +23,7 @@ void sig_handler(int signum, siginfo_t *info, void *ucontext) {
     ucontext = NULL;
 }
 
-int main(void) {
+int main() {
   int result = 0;
 
   struct sigaction recieved = {};
