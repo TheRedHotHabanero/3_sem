@@ -11,56 +11,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-ssize_t crt_link(const char *pathname, const char *newname)
-{
-  // memory allocation
-  char *buf = (char *)calloc(PATH_MAX, sizeof(char));
-  ssize_t result = 0;
-
-  // reading the link
-  if (readlink(pathname, buf, PATH_MAX) < 0)
-  {
-    fprintf(stderr, "Failed to read link\n");
-    result = 12;
-  }
-
-  // creating new link
-  if (symlink(buf, newname) < 0)
-  {
-    fprintf(stderr, "Failed to create a  new link\n");
-    result = 13;
-  }
-
-  free(buf);
-  return result;
-}
-
-// Function which creates a new symlink
-ssize_t crt_linkat(const int old_fd, const int new_fd, const char *pathname,
-                   const char *newname)
-{
-  // memory allocation
-  char *buf = (char *)calloc(PATH_MAX, sizeof(char));
-  ssize_t result = 0;
-
-  // reading the link
-  if (readlinkat(old_fd, pathname, buf, PATH_MAX) < 0)
-  {
-    fprintf(stderr, "Failed to read link\n");
-    result = 12;
-  }
-
-  // creating new link
-  if (symlinkat(buf, new_fd, newname) < 0)
-  {
-    fprintf(stderr, "Failed to create a new link\n");
-    result = 13;
-  }
-
-  free(buf);
-  return result;
-}
-
 char dtype_char(unsigned dtype)
 {
   switch (dtype)
