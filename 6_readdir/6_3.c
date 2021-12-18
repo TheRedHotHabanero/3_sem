@@ -11,67 +11,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-ssize_t write_all(int fd, const void *buf, size_t count)
-{
-  size_t bytes_written = 0;
-  const uint8_t *buf_addr = (const uint8_t *)buf;
-  while (bytes_written < count) {
-    ssize_t res = write(fd, buf_addr + bytes_written, count - bytes_written);
-    if (res < 0)
-    {
-      return res;
-    }
-
-    bytes_written += res;
-  }
-  return (ssize_t)bytes_written;
-}
-
-size_t copy_all(const int fd_1, const int fd_2, struct stat *sb)
-{
-  ssize_t copy_var = 1;
-  while (copy_var > 0) {
-    void *buf = calloc(MEMBLOCK, sizeof(char));
-    assert(buf);
-    copy_var = read(fd_1, buf, MEMBLOCK);
-    if (copy_var < 0) {
-      perror("Failed to read file");
-      free(buf);
-      return 7;
-    }
-
-    if (write_all(fd_2, buf, (size_t)copy_var) < 0)
-    {
-      perror("Failure to write");
-      free(buf);
-      return 8;
-    }
-    free(buf);
-  }
-
-  // copying rights to access
-  if (fchmod(fd_2, sb->st_mode) < 0)
-  {
-    perror("Failure while copying access rights");
-    return 9;
-  }
-
-  // copying time of appeal and modifications
-  if (futimens(fd_2, (struct timespec[]){sb->st_atim, sb->st_mtim}) < 0)
-  {
-    perror("Failure while copying times");
-    return 10;
-  }
-
-  // copying uid and gid
-  if (fchown(fd_2, sb->st_uid, sb->st_gid) < 0)
-  {
-    perror("Failure to copy UID and GID");
-    return 11;
-  }
-  return 0;
-}
-
 ssize_t crt_link(const char *pathname, const char *newname)
 {
   // memory allocation
