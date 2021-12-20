@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-#define DIR_MODE 0777
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -7,6 +5,9 @@
 #include <string.h>
 #include <sys/file.h>
 #include <unistd.h>
+#include <limits.h>
+#define DEVIDER 100 // Maybe the divisor could be less, but otherwise everything crashes
+//fdopen/fscanf/fprintf/fflush  и задача сократится в разы
 
 int main()
 {
@@ -14,10 +15,15 @@ int main()
   int fd = 0;
   int counter = 1;
 
-  char buf[sizeof(unsigned long long int)];
-  memset(buf, 0, sizeof(buf));
+  char buf[ULLONG_MAX/DEVIDER] = "";
 
-  fd = open(file_name, O_RDWR | O_CREAT, DIR_MODE);
+  fd = open(file_name, O_RDWR | O_CREAT, 0600);
+  // opening check
+  if (fd == NULL)
+  {
+    printf ("Failed to open file");
+    return -1;
+  }
 
   // Locking file for reading and writing
   // On  Linux,  lockf()  is  just  an  interface  on top of fcntl(2) locking.
@@ -39,7 +45,7 @@ int main()
   printf("The program worked %d times\n", counter);
   sprintf(number, "%d\n", counter);
 
-  if (pwrite(fd, number, sizeof(number), 0) < 0) {
+  if (pwrite(fd, number, strlen(number), 0) < 0) {
     perror("write");
     lockf(fd, F_ULOCK, 0);
     close(fd);
