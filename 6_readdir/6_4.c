@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <dirent.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -18,7 +19,7 @@ char dtype_char(unsigned dtype)
     case DT_REG:    return '-';
     case DT_SOCK:   return 's';
   }
-  return '?';
+  return DT_UNKNOWN;
 }
 
 char mode_char(unsigned mode)
@@ -36,42 +37,34 @@ char mode_char(unsigned mode)
   return '?';
 }
 
-size_t print_dir(const int fd, unsigned level) {
-  DIR *dir_fd = fdopendir(fd);
-
-  if (!dir_fd) {
-    perror("fdopendir");
-    return 1;
-  }
-
+size_t print_dir(DIR *dir_fd, unsigned level) {
+  int fd = dirfd(dir_fd);
   struct dirent *entry;
 
   while ((entry = readdir(dir_fd)) != NULL) {
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+      continue;
+
     char entry_type = dtype_char(entry->d_type);
-    if (entry_type == '?') {
+    if (entry_type == DT_UNKNOWN) {
       struct stat sb;
       if (fstatat(fd, entry->d_name, &sb, AT_SYMLINK_NOFOLLOW) < 0) {
         perror("fstatat");
       } else
         entry_type = mode_char(sb.st_mode);
     }
+    printf("%c* ", entry_type);
+    if (level > 1)
+      for (unsigned i = 0; i < level - 1; i++)
+      printf("*  ");
 
-    if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
-      printf("%c*  ", entry_type);
+    if (level > 0)
+      printf("*");
 
-      if (level > 1)
-        for (unsigned i = 0; i < level - 1; i++)
-          printf("*  ");
-
-      if (level > 0)
-        printf("*");
-
-      printf("%s\n", entry->d_name);
-      if ((entry_type == 'd')) {
-        int nest_dirfd = openat(fd, entry->d_name, O_RDONLY);
-        print_dir(nest_dirfd, level + 1);
-        close(nest_dirfd);
-      }
+    printf("%s\n", entry->d_name);
+    if (entry_type == 'd') {
+      int nest_dirfd = openat(fd, entry->d_name, O_RDONLY | O_DIRECTORY);
+      DIR *dir_fd = fdopendir(fd);
     }
   }
 
@@ -87,12 +80,6 @@ int main(int argc, char *argv[])
     dir_name = argv[1];
   }
 
-  unsigned level = 0;
-
-  int fd = open(dir_name, O_RDONLY);
-
-  print_dir(fd, level);
-  close(fd);
-
+  print_dir((DIR*)dir_name, 0);
   return 0;
 }
