@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-
 char dtype_char(unsigned dtype)
 {
   switch (dtype)
@@ -24,22 +23,7 @@ char dtype_char(unsigned dtype)
     case DT_REG:    return '-';
     case DT_SOCK:   return 's';
   }
-  return '?';
-}
-
-char mode_char(unsigned mode)
-{
-  switch (mode & S_IFMT)
-  {
-    case S_IFBLK:   return 'b';
-    case S_IFCHR:   return 'c';
-    case S_IFDIR:   return 'd';
-    case S_IFIFO:   return 'p';
-    case S_IFLNK:   return 'l';
-    case S_IFREG:   return '-';
-    case S_IFSOCK:  return 's';
-  }
-  return '?';
+  return DT_UNKNOWN;
 }
 
 struct linux_dirent64 {
@@ -82,7 +66,7 @@ int main(int argc, char *argv[]) {
       break;
 
     while (pos < nread) {
-      struct linux_dirent64 *entry =
+      struct linux_dirent64 *entry = (struct linux_dirent64 *)(buf + pos);
 
       if (entry->d_type == DT_UNKNOWN) {
         struct stat sb;
@@ -92,7 +76,7 @@ int main(int argc, char *argv[]) {
           entry->d_type = IFTODT(sb.st_mode);
       }
 
-      printf("%c|%s\n", entry_type, entry->d_name);
+      printf("%c|%s\n", dtype_char(entry->d_type), entry->d_name);
       pos += entry->d_reclen;
     }
   }
