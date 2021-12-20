@@ -43,10 +43,12 @@ int main(int argc, char *argv[]) {
       if (WIFSTOPPED(status)) {
         printf("Child with PID = %d has been stopped by signal %d (%s)\n", res,
                WSTOPSIG(status), strsignal(WSTOPSIG(status)));
+        continue;
       }
 
       if (WIFCONTINUED(status)) {
         printf("Child with PID = %d has been continued\n", res);
+        continue;
       }
 
       if (WIFEXITED(status)) {
