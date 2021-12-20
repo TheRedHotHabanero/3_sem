@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     if (sbfs.f_favail < 1)
       result = 0;
 
-    if ((long int)(sbfs.f_bavail * sbfs.f_bsize) < sb.st_size)
+    if ((((long int)sbfs.f_bavail) * sbfs.f_bsize) < sb.st_size)
       result = 0;
 
     printf("\nDoes the file fit:                              %s\n",
