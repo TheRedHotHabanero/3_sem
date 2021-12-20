@@ -6,13 +6,14 @@
 #include <string.h>
 #include <sys/inotify.h>
 #include <unistd.h>
-#define NUMBER_OF_SIGNALS 32
+#include <sys/types.h>
+
 
 // The behavior of this variable cannot be optimized
 volatile int g_last_signal = -1;
 volatile siginfo_t *g_from_who;
 
-const int signls[NUMBER_OF_SIGNALS] = {
+const int signls[_NSIG] = {
     SIGABRT,   SIGALRM, SIGBUS,  SIGCHLD, SIGCLD,    SIGCONT, SIGFPE,
     SIGHUP,    SIGILL,  SIGINT,  SIGIO,   SIGIOT,    SIGPIPE, SIGPOLL,
     SIGPROF,   SIGPWR,  SIGQUIT, SIGSEGV, SIGSTKFLT, SIGTSTP, SIGSYS,
@@ -96,8 +97,7 @@ int main(int argc, char *argv[]) {
   recieved.sa_flags = SA_SIGINFO;
   recieved.sa_sigaction = sig_handler;
 
-  // signls and NUMBER_OF_SIGNALS
-  for (int i = 0; i < NUMBER_OF_SIGNALS; i++) {
+  for (int i = 0; i < _NSIG; i++) {
     if (sigaction(signls[i], &recieved, NULL) < 0) {
       perror("sigaction");
       result = -1;
