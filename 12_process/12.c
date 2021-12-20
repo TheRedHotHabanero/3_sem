@@ -11,7 +11,9 @@
 #include <assert.h>
 
 #define NGROUPS 20
-#define DEBUG
+
+// man 7 credentials  выводить в нужном порядке как там
+// man getgropus позвать два раза. сначала с ноликами, а потом нет
 
 int main() {
   // UID
@@ -53,7 +55,8 @@ int main() {
   struct passwd *pw;
   struct group *gr;
   ngroups = NGROUPS;
-  groups = malloc(ngroups * sizeof(gid_t));
+  // в маллоке не умножаем
+  groups = calloc(ngroups * sizeof(gid_t));
   assert(groups);
 
   // Contains ID primary user group
@@ -64,6 +67,8 @@ int main() {
   }
 
   // List of group
+  // ATS (applied type system)
+  // getgrouplist не то. у процесса может быть меньше групп, а может быть больше групп
   if (getgrouplist(user_name, pw->pw_gid, groups, &ngroups) == -1) {
     fprintf(stderr, "getgrouplist() returned -1\n");
     return 0;
