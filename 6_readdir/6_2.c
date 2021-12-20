@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
   while ((entry = readdir(dir_fd)) != NULL)
   {
     char entry_type = dtype_char(entry->d_type);
-    if(entry_type == '?')
+    if(entry_type == DT_UNKNOWN)
     {
       struct stat sb;
       if(fstatat(fd, entry->d_name, &sb, AT_SYMLINK_NOFOLLOW) < 0)
