@@ -7,6 +7,7 @@
 #include <sys/inotify.h>
 #include <unistd.h>
 #include <sys/types.h>
+#define MEMBLOCK 4096
 
 
 // The behavior of this variable cannot be optimized
@@ -21,16 +22,13 @@ const int signls[_NSIG] = {
     SIGVTALRM, SIGXCPU, SIGXFSZ, SIGWINCH};
 
 void sig_handler(int signum, siginfo_t *info, void *ucontext) {
+  (void)ucontext;
   g_last_signal = signum;
   g_from_who = info;
-
-  // Just because it is useless for this program
-  if (ucontext != NULL)
-    ucontext = NULL;
 }
 
 static ssize_t handle_events(int fd, int wd, const char *dir_name) {
-  char buf[4096];
+  char buf[MEMBLOCK];
   const struct inotify_event *event;
   ssize_t len;
   char *ptr;
@@ -90,7 +88,7 @@ int main(int argc, char *argv[]) {
   nfds_t nfds = 2;
   struct pollfd fds[2];
 
-  char input_buf[4096];
+  char input_buf[MEMBLOCK];
 
   struct sigaction recieved = {};
 
