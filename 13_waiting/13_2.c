@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,11 +26,8 @@ int main() {
   if (child_id == 0) {
     // This code is executed in child process only
     proc_info("Child");
-
     pid_t parent_pid = getppid();
-
     int pidfd = pidfd_open(parent_pid, 0);
-
     struct pollfd pollfd = {.fd = pidfd, .events = POLLIN};
 
     int poll_num = poll(&pollfd, 1, -1);
@@ -46,8 +42,6 @@ int main() {
   } else {
     // This code is executed in parent process only
     proc_info("Parent");
-
-    sleep(20);
   }
   return 0;
 }
