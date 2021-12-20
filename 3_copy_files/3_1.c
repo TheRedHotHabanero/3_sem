@@ -24,30 +24,28 @@ ssize_t write_all(int fd, const void *buf, size_t count)
   return (ssize_t)bytes_written;
 }
 
-size_t copy_all(const int fd_1, const int fd_2)
+int copy_all(const int fd_1, const int fd_2)
 {
-  ssize_t copy_var = 1;
-  while(copy_var > 0)
+  ssize_t copy_var;
+  void* buf = calloc(MEMBLOCK, sizeof(char));
+  assert(buf);
+  int res = 0;
+  while (copy_var = read(fd_1, buf, MEMBLOCK))
   {
-    void* buf = calloc(MEMBLOCK, sizeof(char));
-    assert(buf);
-    copy_var = read(fd_1, buf, MEMBLOCK);
-    if(copy_var < 0)
-    {
-      perror("Failed to read file");
-      free(buf);
-      return 7;
-    }
-
-    if(write_all(fd_2, buf, (size_t)copy_var) < 0)
+    if (write_all(fd_2, buf, (size_t)copy_var) < 0)
     {
       perror("Failure to write");
       free(buf);
-      return 8;
+      return 0;
     }
-    free(buf);
   }
-  return 0;
+  if (copy_var < 0)
+  {
+    perror("Failure to read file");
+    res = 7;
+  }
+  free(buf);
+  return res;
 }
 
 int main(int argc, char *argv[])
