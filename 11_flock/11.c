@@ -6,8 +6,6 @@
 #include <sys/file.h>
 #include <unistd.h>
 #include <limits.h>
-#define DEVIDER 100 // Maybe the divisor could be less, but otherwise everything crashes
-//fdopen/fscanf/fprintf/fflush  и задача сократится в разы
 
 int main()
 {
@@ -15,7 +13,8 @@ int main()
   int fd = 0;
   int counter = 1;
 
-  char buf[ULLONG_MAX/DEVIDER] = "";
+  // 10**20 <= 2**63 - 1 < 10**21
+  char buf[20 + 1] = "";
 
   fd = open(file_name, O_RDWR | O_CREAT, 0600);
   // opening check
